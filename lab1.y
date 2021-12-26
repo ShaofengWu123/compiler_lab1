@@ -10,13 +10,28 @@
 %token number
 
 %%
-T : E '<' number {if($1 >= $3){printf("False\n");exit(1);}else{printf("True\n\n");}}
-  | E '>' number {if($1 <= $3){printf("False\n");exit(1);}else{printf("True\n\n");}}
+/*** Modification Time: 2021/11/13
+     Modification Result: Syntax Translation Rule Simplified
+     Author: Chen Wang
+***/
+T : E {if($1 > 0){printf("True\n\n");}else{printf("false\n\n");}}
   ;
 E : E '<' number  {if($1 >= $3){printf("False\n");exit(1);}else{$$ = $3;}}
   | E '>' number  {if($1 <= $3){printf("False\n");exit(1);}else{$$ = $3;}}
   | number {$$ = $1;}
-  ; 
+  ;
+
+/* Original Version:
+  T : E '<' number {if($1 >= $3){printf("False\n");exit(1);}else{printf("True\n\n");}}
+  | E '>' number {if($1 <= $3){printf("False\n");exit(1);}else{printf("True\n\n");}}
+  //if a single non-zero number,print true
+  | number {if($1 > 0){printf("True\n\n");}else{printf("false\n\n");}}
+  ;
+E : E '<' number  {if($1 >= $3){printf("False\n");exit(1);}else{$$ = $3;}}
+  | E '>' number  {if($1 <= $3){printf("False\n");exit(1);}else{$$ = $3;}}
+  | number {$$ = $1;}
+  ;
+*/
 %%
 
 int yylex()
@@ -39,8 +54,10 @@ int main()
 
 void yyerror(char *s)
 {
-   printf("%s\n", s ); 
+   printf("%s\n", s );
 }
 
 int yywrap()
-{ return 1; }  
+{
+   return 1;
+}
